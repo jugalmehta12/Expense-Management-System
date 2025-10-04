@@ -1,0 +1,70 @@
+architecture-beta
+    group frontend(cloud)[Frontend Layer]
+    group backend(server)[Backend Services]
+    group database(database)[Data Layer]
+    group external(internet)[External Services]
+    group ai(cloud)[AI Services]
+
+    service react(server)[React App] in frontend
+    service mobile(server)[Mobile App] in frontend
+    
+    service api_gateway(server)[API Gateway] in backend
+    service auth_service(server)[Auth Service] in backend
+    service expense_service(server)[Expense Service] in backend
+    service approval_service(server)[Approval Service] in backend
+    service ocr_service(server)[OCR Service] in backend
+    service currency_service(server)[Currency Service] in backend
+    service notification_service(server)[Notification Service] in backend
+    service analytics_service(server)[Analytics Service] in backend
+    service websocket(server)[WebSocket Server] in backend
+    
+    service mongodb(database)[MongoDB] in database
+    service redis(database)[Redis Cache] in database
+    service file_storage(disk)[File Storage] in database
+    
+    service currency_api(internet)[Currency APIs] in external
+    service email_service(internet)[Email Service] in external
+    service sms_service(internet)[SMS Service] in external
+    service cloud_storage(cloud)[Cloud Storage] in external
+    
+    service tesseract(cloud)[Tesseract OCR] in ai
+    service anomaly_detector(cloud)[Anomaly Detection] in ai
+    service ml_categorizer(cloud)[Auto Categorizer] in ai
+    service fraud_detector(cloud)[Fraud Detection] in ai
+
+    react:B --> T:api_gateway
+    mobile:B --> T:api_gateway
+    
+    api_gateway:B --> T:auth_service
+    api_gateway:B --> T:expense_service
+    api_gateway:B --> T:approval_service
+    api_gateway:B --> T:analytics_service
+    
+    expense_service:B --> T:ocr_service
+    expense_service:R --> L:currency_service
+    expense_service:R --> L:notification_service
+    approval_service:R --> L:notification_service
+    
+    auth_service:B --> T:mongodb
+    expense_service:B --> T:mongodb
+    approval_service:B --> T:mongodb
+    analytics_service:B --> T:mongodb
+    
+    auth_service:B --> T:redis
+    currency_service:B --> T:redis
+    expense_service:B --> T:redis
+    
+    expense_service:B --> T:file_storage
+    
+    currency_service:R --> L:currency_api
+    notification_service:R --> L:email_service
+    notification_service:R --> L:sms_service
+    expense_service:R --> L:cloud_storage
+    
+    ocr_service:R --> L:tesseract
+    expense_service:R --> L:anomaly_detector
+    expense_service:R --> L:ml_categorizer
+    expense_service:R --> L:fraud_detector
+    
+    websocket:B --> T:react
+    websocket:B --> T:mobile

@@ -1,0 +1,42 @@
+{
+  "name": "expense-management-system",
+  "version": "1.0.0",
+  "description": "NextGen AI-Powered Expense Reimbursement & Approval Management System",
+  "main": "server/app.js",
+  "scripts": {
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "cd server && npm run dev",
+    "client": "cd client && npm run dev",
+    "build": "cd client && npm run build",
+    "start": "cd server && npm start",
+    "test": "npm run test:server && npm run test:client",
+    "test:server": "cd server && npm test",
+    "test:client": "cd client && npm test",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix"
+  },
+  "keywords": [
+    "expense-management",
+    "reimbursement",
+    "approval-workflow",
+    "AI",
+    "OCR",
+    "enterprise",
+    "fintech"
+  ],
+  "author": "NextGen Expense Team",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "eslint": "^8.57.0",
+    "prettier": "^3.1.1"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jugalmehta12/Expense-Management-System.git"
+  }
+}
