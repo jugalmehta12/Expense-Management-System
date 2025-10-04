@@ -12,6 +12,7 @@ import App from './App';
 import { AuthProvider } from './contexts/AuthContext';
 import { SocketProvider } from './contexts/SocketContext';
 import { SettingsProvider } from './contexts/SettingsContext';
+import { NotificationProvider } from './contexts/NotificationContext';
 import ErrorBoundary from './components/ErrorBoundary';
 import './index.css';
 
@@ -196,10 +197,12 @@ root.render(
             <BrowserRouter>
               <AuthProvider>
                 <SettingsProvider>
-                  <SocketProvider>
-                    <App />
-                    <Toaster toastOptions={toastOptions} />
-                  </SocketProvider>
+                  <NotificationProvider>
+                    <SocketProvider>
+                      <App />
+                      <Toaster toastOptions={toastOptions} />
+                    </SocketProvider>
+                  </NotificationProvider>
                 </SettingsProvider>
               </AuthProvider>
             </BrowserRouter>

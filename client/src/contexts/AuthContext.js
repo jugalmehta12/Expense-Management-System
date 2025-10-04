@@ -46,12 +46,13 @@ export const AuthProvider = ({ children }) => {
     }
   );
 
-  // Initialize auth state
+  // Initialize auth state for users without tokens
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (!token) {
       setLoading(false);
     }
+    // If token exists, let useQuery handle the loading state
   }, []);
 
   const login = async (credentials) => {

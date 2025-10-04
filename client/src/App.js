@@ -24,6 +24,7 @@ const CompanySettings = React.lazy(() => import('./pages/CompanySettings'));
 const UserManagement = React.lazy(() => import('./pages/UserManagement'));
 const Reports = React.lazy(() => import('./pages/Reports'));
 const AuditLog = React.lazy(() => import('./pages/AuditLog'));
+const TestPage = React.lazy(() => import('./pages/TestPage'));
 const NotFound = React.lazy(() => import('./pages/NotFound'));
 
 // Fallback loading component
@@ -144,6 +145,9 @@ function App() {
                   </ProtectedRoute>
                 } 
               />
+              
+              {/* Test Page */}
+              <Route path="/test" element={<TestPage />} />
             </Route>
           </Route>
 

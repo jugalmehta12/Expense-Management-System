@@ -30,6 +30,10 @@ const { authMiddleware } = require('./middleware/auth');
 const errorHandler = require('./middleware/errorHandler');
 
 const app = express();
+
+// Trust proxy for rate limiting behind reverse proxy
+app.set('trust proxy', 1);
+
 const server = createServer(app);
 const io = new Server(server, {
   cors: {

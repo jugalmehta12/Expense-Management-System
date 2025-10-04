@@ -34,21 +34,24 @@ import {
   Business as CompanyIcon,
   People as PeopleIcon
 } from '@mui/icons-material';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, Outlet } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
+import { useNotifications } from '../../contexts/NotificationContext';
+import NotificationPanel from '../Notifications/NotificationPanel';
 
 const drawerWidth = 240;
 
-const Layout = ({ children }) => {
+const Layout = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const navigate = useNavigate();
   const location = useLocation();
   const { user, logout } = useAuth();
+  const { notifications, unreadCount, markAsRead, deleteNotification } = useNotifications();
   
   const [mobileOpen, setMobileOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
-  const [notificationCount] = useState(3); // TODO: Get from real-time service
+  const [notificationPanelOpen, setNotificationPanelOpen] = useState(false);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -92,11 +95,12 @@ const Layout = ({ children }) => {
       { text: 'Analytics', icon: <AnalyticsIcon />, path: '/analytics' },
       { text: 'Company Settings', icon: <CompanyIcon />, path: '/company' },
       { text: 'User Management', icon: <PeopleIcon />, path: '/users' },
-      { text: 'Admin Panel', icon: <AdminIcon />, path: '/admin' }
+      { text: 'Audit Log', icon: <AdminIcon />, path: '/audit' }
     ];
 
     const settingsItems = [
-      { text: 'Settings', icon: <SettingsIcon />, path: '/settings' }
+      { text: 'Settings', icon: <SettingsIcon />, path: '/settings' },
+      { text: 'Test Features', icon: <SettingsIcon />, path: '/test' }
     ];
 
     let items = [...baseItems];
@@ -192,8 +196,12 @@ const Layout = ({ children }) => {
 
           {/* Notifications */}
           <Tooltip title="Notifications">
-            <IconButton color="inherit" sx={{ mr: 1 }}>
-              <Badge badgeContent={notificationCount} color="error">
+            <IconButton 
+              color="inherit" 
+              sx={{ mr: 1 }}
+              onClick={() => setNotificationPanelOpen(true)}
+            >
+              <Badge badgeContent={unreadCount} color="error">
                 <NotificationsIcon />
               </Badge>
             </IconButton>
@@ -311,8 +319,17 @@ const Layout = ({ children }) => {
         }}
       >
         <Toolbar />
-        {children}
+        <Outlet />
       </Box>
+
+      {/* Notification Panel */}
+      <NotificationPanel
+        open={notificationPanelOpen}
+        onClose={() => setNotificationPanelOpen(false)}
+        notifications={notifications}
+        onMarkAsRead={markAsRead}
+        onDelete={deleteNotification}
+      />
     </Box>
   );
 };
