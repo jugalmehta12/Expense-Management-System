@@ -7,6 +7,7 @@ const Expense = require('../models/Expense');
 const Company = require('../models/Company');
 const User = require('../models/User');
 const { requireRole, requireSameUserOrManager } = require('../middleware/auth');
+const { validateObjectId, validatePagination, validateSearchQuery } = require('../middleware/validation');
 
 const router = express.Router();
 
@@ -129,7 +130,7 @@ router.get('/recent', [
  *   get:
  *     summary: Get expenses with filtering and pagination
  */
-router.get('/', async (req, res) => {
+router.get('/', validatePagination, validateSearchQuery, async (req, res) => {
   try {
     const {
       status,
@@ -259,7 +260,7 @@ router.post('/create', [
  *   get:
  *     summary: Get expense by ID
  */
-router.get('/:id', async (req, res) => {
+router.get('/:id', validateObjectId(), async (req, res) => {
   try {
     const expense = await Expense.findById(req.params.id)
       .populate('submittedBy', 'firstName lastName email')

@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
+const { validateObjectId, validatePagination, validateSearchQuery } = require('../middleware/validation');
 
 /**
  * @swagger
@@ -174,7 +175,7 @@ router.put('/profile', async (req, res) => {
  *       403:
  *         description: Forbidden - insufficient privileges
  */
-router.get('/', async (req, res) => {
+router.get('/', validatePagination, validateSearchQuery, async (req, res) => {
   try {
     // Check if user has permission to view all users
     if (!['admin', 'manager', 'finance', 'director'].includes(req.user.role)) {
@@ -255,7 +256,7 @@ router.get('/', async (req, res) => {
  *       404:
  *         description: User not found
  */
-router.get('/:id', async (req, res) => {
+router.get('/:id', validateObjectId(), async (req, res) => {
   try {
     // Check permissions
     if (!['admin', 'manager', 'finance', 'director'].includes(req.user.role)) {
@@ -331,7 +332,7 @@ router.get('/:id', async (req, res) => {
  *       404:
  *         description: User not found
  */
-router.put('/:id', async (req, res) => {
+router.put('/:id', validateObjectId(), async (req, res) => {
   try {
     // Only admins can update users
     if (req.user.role !== 'admin') {
@@ -395,7 +396,7 @@ router.put('/:id', async (req, res) => {
  *       404:
  *         description: User not found
  */
-router.patch('/:id/deactivate', async (req, res) => {
+router.patch('/:id/deactivate', validateObjectId(), async (req, res) => {
   try {
     if (req.user.role !== 'admin') {
       return res.status(403).json({

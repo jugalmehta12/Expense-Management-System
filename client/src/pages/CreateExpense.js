@@ -297,7 +297,6 @@ const CreateExpense = () => {
           aiInsights: aiInsights,
         };
 
-        console.log('Submitting expense:', submissionData);
         
         // Simulate API submission
         await new Promise(resolve => setTimeout(resolve, 2000));

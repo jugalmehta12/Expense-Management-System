@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Expense = require('../models/Expense');
+const { validateObjectId, validatePagination } = require('../middleware/validation');
 
 /**
  * @swagger
@@ -31,7 +32,7 @@ const Expense = require('../models/Expense');
  *       403:
  *         description: Forbidden - insufficient privileges
  */
-router.get('/pending', async (req, res) => {
+router.get('/pending', validatePagination, async (req, res) => {
   try {
     // Check if user has approval permissions
     if (!['manager', 'finance', 'director', 'admin'].includes(req.user.role)) {
@@ -118,7 +119,7 @@ router.get('/pending', async (req, res) => {
  *       404:
  *         description: Expense not found
  */
-router.post('/:id/approve', async (req, res) => {
+router.post('/:id/approve', validateObjectId(), async (req, res) => {
   try {
     const { comments } = req.body;
     const expenseId = req.params.id;
@@ -240,7 +241,7 @@ router.post('/:id/approve', async (req, res) => {
  *       404:
  *         description: Expense not found
  */
-router.post('/:id/reject', async (req, res) => {
+router.post('/:id/reject', validateObjectId(), async (req, res) => {
   try {
     const { reason, comments } = req.body;
     const expenseId = req.params.id;
@@ -359,7 +360,7 @@ router.post('/:id/reject', async (req, res) => {
  *       404:
  *         description: Expense not found
  */
-router.post('/:id/override', async (req, res) => {
+router.post('/:id/override', validateObjectId(), async (req, res) => {
   try {
     // Only admins and directors can override
     if (!['admin', 'director'].includes(req.user.role)) {
