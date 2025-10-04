@@ -73,7 +73,7 @@ const Dashboard = () => {
         <Box sx={{ display: 'flex', gap: 2 }}>
           <Button 
             variant="contained" 
-            onClick={() => navigate('/expenses/new')}
+            onClick={() => navigate('/create-expense')}
           >
             New Expense
           </Button>
@@ -133,10 +133,10 @@ const Dashboard = () => {
             Quick Actions
           </Typography>
           <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
-            <Button variant="outlined" onClick={() => navigate('/expenses/new')}>
+            <Button variant="outlined" onClick={() => navigate('/create-expense')}>
               Create Expense
             </Button>
-            <Button variant="outlined" onClick={() => navigate('/expenses')}>
+            <Button variant="outlined" onClick={() => navigate('/my-expenses')}>
               View My Expenses
             </Button>
             <Button variant="outlined" onClick={() => navigate('/team-expenses')}>

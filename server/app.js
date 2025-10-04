@@ -43,8 +43,12 @@ const io = new Server(server, {
       "http://127.0.0.1:3002", 
       "http://127.0.0.1:3005"
     ],
-    methods: ["GET", "POST"]
-  }
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true
+  },
+  transports: ['websocket', 'polling'],
+  allowEIO3: true
 });
 
 // Swagger configuration

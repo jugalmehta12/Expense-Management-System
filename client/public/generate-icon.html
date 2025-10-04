@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Icon Generator</title>
+</head>
+<body>
+  <canvas id="iconCanvas" width="144" height="144" style="border: 1px solid #ccc;"></canvas>
+  <script>
+    const canvas = document.getElementById('iconCanvas');
+    const ctx = canvas.getContext('2d');
+    
+    // Fill background
+    ctx.fillStyle = '#1976d2';
+    ctx.fillRect(0, 0, 144, 144);
+    
+    // Draw dollar sign
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 72px Arial';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('$', 72, 72);
+    
+    // Convert to downloadable image
+    const dataURL = canvas.toDataURL('image/png');
+    const link = document.createElement('a');
+    link.download = 'icon-144x144.png';
+    link.href = dataURL;
+    link.click();
+  </script>
+</body>
+</html>

@@ -152,7 +152,6 @@ import {
   ResponsiveContainer,
   Pie,
   Cell,
-  BarChart,
   Bar,
   LineChart,
   Line,

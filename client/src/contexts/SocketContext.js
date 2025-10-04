@@ -18,11 +18,15 @@ export const SocketProvider = ({ children }) => {
   const { user } = useAuth();
 
   useEffect(() => {
-    if (user) {
+    // Temporarily disable socket connection to fix namespace error
+    // TODO: Re-enable after fixing server configuration
+    if (false && user) {
       // Create socket connection
       const newSocket = io(process.env.REACT_APP_API_URL || 'http://localhost:5000', {
         transports: ['websocket', 'polling'],
         timeout: 20000,
+        autoConnect: true,
+        forceNew: true,
       });
 
       newSocket.on('connect', () => {

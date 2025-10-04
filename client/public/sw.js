@@ -35,7 +35,7 @@ const NETWORK_FIRST_PATTERNS = [
 // ==========================================
 
 // Install event - cache static assets
-self.addEventListener('install', (event) => {
+this.addEventListener('install', (event) => {
   console.log('[SW] Installing service worker...');
   
   event.waitUntil(
@@ -46,7 +46,7 @@ self.addEventListener('install', (event) => {
       })
       .then(() => {
         console.log('[SW] Static assets cached successfully');
-        return self.skipWaiting();
+        return this.skipWaiting();
       })
       .catch((error) => {
         console.error('[SW] Failed to cache static assets:', error);
@@ -55,7 +55,7 @@ self.addEventListener('install', (event) => {
 });
 
 // Activate event - clean up old caches
-self.addEventListener('activate', (event) => {
+this.addEventListener('activate', (event) => {
   console.log('[SW] Activating service worker...');
   
   event.waitUntil(
@@ -74,18 +74,23 @@ self.addEventListener('activate', (event) => {
       })
       .then(() => {
         console.log('[SW] Service worker activated');
-        return self.clients.claim();
+        return this.clients.claim();
       })
   );
 });
 
 // Fetch event - implement caching strategies
-self.addEventListener('fetch', (event) => {
+this.addEventListener('fetch', (event) => {
   const { request } = event;
   const url = new URL(request.url);
 
   // Skip non-GET requests
   if (request.method !== 'GET') {
+    return;
+  }
+
+  // Skip chrome-extension requests
+  if (request.url.startsWith('chrome-extension:')) {
     return;
   }
 
@@ -137,11 +142,19 @@ async function handleStaticRequest(request) {
 // Network-first caching strategy
 async function networkFirst(request, cacheName) {
   try {
+    // Skip chrome-extension requests
+    if (request.url.startsWith('chrome-extension:')) {
+      return fetch(request);
+    }
+    
     const response = await fetch(request);
     
     if (response.ok) {
       const cache = await caches.open(cacheName);
-      cache.put(request, response.clone());
+      // Only cache HTTP/HTTPS requests
+      if (request.url.startsWith('http')) {
+        cache.put(request, response.clone());
+      }
     }
     
     return response;
@@ -206,7 +219,7 @@ async function updateCacheInBackground(request, cacheName) {
 // ==========================================
 
 // Register for background sync
-self.addEventListener('sync', (event) => {
+this.addEventListener('sync', (event) => {
   console.log('[SW] Background sync event:', event.tag);
   
   if (event.tag === 'expense-sync') {
@@ -289,7 +302,7 @@ async function syncOfflineReceipts() {
 // ==========================================
 
 // Handle push notifications
-self.addEventListener('push', (event) => {
+this.addEventListener('push', (event) => {
   console.log('[SW] Push notification received');
   
   let notificationData = {
@@ -333,12 +346,12 @@ self.addEventListener('push', (event) => {
   };
   
   event.waitUntil(
-    self.registration.showNotification(notificationData.title, options)
+    this.registration.showNotification(notificationData.title, options)
   );
 });
 
 // Handle notification clicks
-self.addEventListener('notificationclick', (event) => {
+this.addEventListener('notificationclick', (event) => {
   console.log('[SW] Notification clicked:', event.action);
   
   event.notification.close();
@@ -347,7 +360,7 @@ self.addEventListener('notificationclick', (event) => {
     const urlToOpen = event.notification.data.url || '/';
     
     event.waitUntil(
-      clients.matchAll({ type: 'window', includeUncontrolled: true })
+      this.clients.matchAll({ type: 'window', includeUncontrolled: true })
         .then((clientList) => {
           // Check if app is already open
           for (const client of clientList) {
@@ -357,8 +370,8 @@ self.addEventListener('notificationclick', (event) => {
           }
           
           // Open new window/tab
-          if (clients.openWindow) {
-            return clients.openWindow(urlToOpen);
+          if (this.clients.openWindow) {
+            return this.clients.openWindow(urlToOpen);
           }
         })
     );
@@ -395,7 +408,7 @@ async function removeOfflineReceipt(id) {
 // ==========================================
 
 // Handle periodic background sync (requires permission)
-self.addEventListener('periodicsync', (event) => {
+this.addEventListener('periodicsync', (event) => {
   console.log('[SW] Periodic sync event:', event.tag);
   
   if (event.tag === 'expense-analytics-update') {
@@ -423,7 +436,7 @@ async function updateAnalyticsCache() {
 // ==========================================
 
 // Handle messages from main thread
-self.addEventListener('message', (event) => {
+this.addEventListener('message', (event) => {
   console.log('[SW] Message received:', event.data);
   
   if (event.data.type === 'SKIP_WAITING') {

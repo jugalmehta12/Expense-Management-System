@@ -80,7 +80,7 @@ const Layout = ({ children }) => {
     const baseItems = [
       { text: 'Dashboard', icon: <DashboardIcon />, path: '/dashboard' },
       { text: 'My Expenses', icon: <ReceiptIcon />, path: '/expenses' },
-      { text: 'Create Expense', icon: <ReceiptIcon />, path: '/expenses/create' }
+      { text: 'Create Expense', icon: <ReceiptIcon />, path: '/expenses/new' }
     ];
 
     const managerItems = [

@@ -15,6 +15,7 @@ const Dashboard = React.lazy(() => import('./pages/Dashboard'));
 const Expenses = React.lazy(() => import('./pages/Expenses'));
 const ExpenseDetails = React.lazy(() => import('./pages/ExpenseDetails'));
 const CreateExpense = React.lazy(() => import('./pages/CreateExpense'));
+const TeamExpenses = React.lazy(() => import('./pages/TeamExpenses'));
 const Approvals = React.lazy(() => import('./pages/Approvals'));
 const Analytics = React.lazy(() => import('./pages/Analytics'));
 const Settings = React.lazy(() => import('./pages/Settings'));
@@ -87,29 +88,14 @@ function App() {
               <Route path="/expenses/new" element={<CreateExpense />} />
               <Route path="/expenses/:id" element={<ExpenseDetails />} />
               
-              {/* Approvals */}
-              <Route 
-                path="/approvals" 
-                element={
-                  <ProtectedRoute 
-                    roles={['manager', 'finance', 'director', 'admin']}
-                  >
-                    <Approvals />
-                  </ProtectedRoute>
-                } 
-              />
+              {/* Team Expenses */}
+              <Route path="/team-expenses" element={<TeamExpenses />} />
               
-              {/* Analytics */}
-              <Route 
-                path="/analytics" 
-                element={
-                  <ProtectedRoute 
-                    roles={['manager', 'finance', 'director', 'admin']}
-                  >
-                    <Analytics />
-                  </ProtectedRoute>
-                } 
-              />
+              {/* Approvals - Allow employees to view */}
+              <Route path="/approvals" element={<Approvals />} />
+              
+              {/* Analytics - Allow employees to view */}
+              <Route path="/analytics" element={<Analytics />} />
               
               {/* Reports */}
               <Route 
@@ -164,6 +150,17 @@ function App() {
           {/* Default redirect */}
           <Route 
             path="/" 
+            element={
+              <Navigate 
+                to={user ? "/dashboard" : "/login"} 
+                replace 
+              />
+            } 
+          />
+
+          {/* Admin redirect */}
+          <Route 
+            path="/admin" 
             element={
               <Navigate 
                 to={user ? "/dashboard" : "/login"} 
